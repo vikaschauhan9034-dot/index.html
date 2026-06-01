@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Puzzle Surprise</title>
+<style>
+body{font-family:Arial;text-align:center;background:#ffeef2;padding:20px}
+#puzzle{width:306px;height:306px;margin:auto;display:grid;grid-template-columns:repeat(3,102px)}
+.tile{
+ width:102px;height:102px;border:1px solid #fff;
+ background-image:url('shree.jpg');
+ background-size:306px 306px;
+ cursor:grab;
+}
+#msg{margin-top:15px}
+</style>
+</head>
+<body>
+
+<h2>🧩 Shree Puzzle Challenge ❤️</h2>
+<p>Drag & drop karke puzzle solve karo.</p>
+
+<div id="puzzle"></div>
+<div id="msg"></div>
+
+<script>
+const puzzle=document.getElementById("puzzle");
+let pieces=[0,1,2,3,4,5,6,7,8];
+
+function shuffle(){
+  for(let i=pieces.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [pieces[i],pieces[j]]=[pieces[j],pieces[i]];
+  }
+}
+
+let dragIndex=null;
+
+function render(){
+  puzzle.innerHTML='';
+
+  pieces.forEach((value,index)=>{
+    const tile=document.createElement('div');
+    tile.className='tile';
+    tile.draggable=true;
+
+    const row=Math.floor(value/3);
+    const col=value%3;
+
+    tile.style.backgroundPosition =
+      (-col*102)+'px '+(-row*102)+'px';
+
+    tile.addEventListener('dragstart',()=>{
+      dragIndex=index;
+    });
+
+    tile.addEventListener('dragover',(e)=>{
+      e.preventDefault();
+    });
+
+    tile.addEventListener('drop',()=>{
+      [pieces[dragIndex],pieces[index]] =
+      [pieces[index],pieces[dragIndex]];
+
+      render();
+      checkWin();
+    });
+
+    puzzle.appendChild(tile);
+  });
+}
+
+function checkWin(){
+  for(let i=0;i<pieces.length;i++){
+    if(pieces[i]!==i) return;
+  }
+
+  document.getElementById('msg').innerHTML =
+    "🎉 Puzzle Solved! Surprise Opening...";
+
+  setTimeout(()=>{
+    // Replace with your old surprise page filename
+    window.location.href = "Meri_Pyari_Shree.html";
+  },1500);
+}
+
+shuffle();
+render();
+</script>
+
+</body>
+</html>
